@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matt Wolsko · Sports Analytics Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#08090d;
+  --bg2:#0f1117;
+  --bg3:#181c26;
+  --bdr:rgba(255,255,255,.07);
+  --bdr2:rgba(255,255,255,.13);
+  --t:#eef0f6;
+  --t2:#8892a4;
+  --t3:#454e60;
+  --green:#22c55e;
+  --orange:#f97316;
+  --blue:#60a5fa;
+  --accent:#e2e8f0;
+}
+
+html,body{background:var(--bg);color:var(--t);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden;}
+
+/* ── NOISE TEXTURE OVERLAY ── */
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;opacity:.4;
+}
+
+/* ── GRADIENT MESH ── */
+.mesh{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;}
+.mesh-blob{position:absolute;border-radius:50%;filter:blur(120px);opacity:.12;}
+.mb1{width:600px;height:600px;background:radial-gradient(circle,#22c55e,transparent);top:-200px;left:-200px;animation:drift1 18s ease-in-out infinite;}
+.mb2{width:500px;height:500px;background:radial-gradient(circle,#f97316,transparent);bottom:-150px;right:-150px;animation:drift2 22s ease-in-out infinite;}
+.mb3{width:400px;height:400px;background:radial-gradient(circle,#60a5fa,transparent);top:40%;left:50%;transform:translate(-50%,-50%);animation:drift3 26s ease-in-out infinite;}
+@keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(60px,40px)}}
+@keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(-50px,-30px)}}
+@keyframes drift3{0%,100%{transform:translate(-50%,-50%)}50%{transform:translate(-50%,-42%)}}
+
+/* ── LAYOUT ── */
+.wrap{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:0 32px 100px;}
+
+/* ── HEADER ── */
+header{padding:72px 0 0;}
+.header-eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:20px;}
+.eyebrow-line{width:40px;height:1px;background:var(--t3);}
+.eyebrow-text{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--t3);}
+
+.name-block{margin-bottom:12px;}
+.name-first{font-family:'Instrument Serif',serif;font-size:clamp(52px,9vw,96px);line-height:.95;color:var(--t);display:block;opacity:0;animation:fadeUp .8s .1s cubic-bezier(.16,1,.3,1) forwards;}
+.name-last{font-family:'Instrument Serif',serif;font-style:italic;font-size:clamp(52px,9vw,96px);line-height:.95;color:var(--t2);display:block;opacity:0;animation:fadeUp .8s .2s cubic-bezier(.16,1,.3,1) forwards;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+.tagline{font-size:16px;color:var(--t2);line-height:1.7;max-width:480px;margin-top:20px;opacity:0;animation:fadeUp .8s .35s cubic-bezier(.16,1,.3,1) forwards;}
+
+.header-links{display:flex;gap:16px;margin-top:28px;opacity:0;animation:fadeUp .8s .45s cubic-bezier(.16,1,.3,1) forwards;}
+.hlink{display:inline-flex;align-items:center;gap:6px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--t3);text-decoration:none;padding:8px 14px;border:1px solid var(--bdr);border-radius:6px;transition:all .2s;}
+.hlink:hover{color:var(--t);border-color:var(--bdr2);background:rgba(255,255,255,.03);}
+
+/* ── DIVIDER ── */
+.divider{height:1px;background:linear-gradient(90deg,transparent,var(--bdr2) 30%,var(--bdr2) 70%,transparent);margin:56px 0;}
+
+/* ── SECTION LABEL ── */
+.sec-lbl{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--t3);margin-bottom:28px;display:flex;align-items:center;gap:12px;}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--bdr);}
+
+/* ── PROJECT CARDS ── */
+.projects{display:grid;gap:16px;}
+
+.project-card{
+  display:grid;
+  grid-template-columns:1fr auto;
+  align-items:center;
+  gap:24px;
+  background:var(--bg2);
+  border:1px solid var(--bdr);
+  border-radius:16px;
+  padding:28px 32px;
+  text-decoration:none;
+  color:inherit;
+  transition:all .25s cubic-bezier(.16,1,.3,1);
+  position:relative;
+  overflow:hidden;
+  opacity:0;
+  animation:fadeUp .8s cubic-bezier(.16,1,.3,1) forwards;
+}
+.project-card:nth-child(1){animation-delay:.5s;}
+.project-card:nth-child(2){animation-delay:.62s;}
+.project-card:nth-child(3){animation-delay:.74s;}
+
+.project-card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.02) 0%,transparent 60%);
+  pointer-events:none;
+}
+
+.project-card:hover{
+  border-color:var(--bdr2);
+  transform:translateY(-2px);
+  box-shadow:0 20px 60px rgba(0,0,0,.4);
+}
+
+.project-card.nfl:hover{border-color:rgba(34,197,94,.25);box-shadow:0 20px 60px rgba(34,197,94,.08);}
+.project-card.nba:hover{border-color:rgba(249,115,22,.25);box-shadow:0 20px 60px rgba(249,115,22,.08);}
+.project-card.soon{cursor:default;opacity:.5 !important;}
+.project-card.soon:hover{transform:none;box-shadow:none;border-color:var(--bdr);}
+
+.card-left{min-width:0;}
+
+.card-meta{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+.card-num{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--t3);width:24px;}
+.card-tag{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;padding:3px 9px;border-radius:4px;border:1px solid;}
+.tag-nfl{color:var(--green);border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.08);}
+.tag-nba{color:var(--orange);border-color:rgba(249,115,22,.3);background:rgba(249,115,22,.08);}
+.tag-soon{color:var(--t3);border-color:var(--bdr);background:transparent;}
+.tag-live{color:var(--green);border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.08);display:flex;align-items:center;gap:4px;}
+.live-dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+.card-title{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;line-height:1;margin-bottom:8px;color:var(--t);}
+.card-desc{font-size:13px;color:var(--t2);line-height:1.65;max-width:540px;}
+
+.card-pills{display:flex;gap:6px;margin-top:14px;flex-wrap:wrap;}
+.cpill{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.5px;padding:4px 10px;border-radius:20px;border:1px solid var(--bdr);background:var(--bg3);color:var(--t3);}
+
+.card-arrow{
+  width:40px;height:40px;border-radius:10px;
+  border:1px solid var(--bdr);
+  background:var(--bg3);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  font-size:16px;
+  transition:all .2s;
+  color:var(--t3);
+}
+.project-card:hover .card-arrow{border-color:var(--bdr2);color:var(--t);transform:translate(2px,-2px);}
+.project-card.soon .card-arrow{opacity:.3;}
+
+/* ── ABOUT STRIP ── */
+.about-strip{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:0;}
+.about-card{background:var(--bg2);border:1px solid var(--bdr);border-radius:12px;padding:20px 22px;}
+.about-lbl{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--t3);margin-bottom:8px;}
+.about-val{font-size:14px;color:var(--t2);line-height:1.65;}
+.about-val strong{color:var(--t);font-weight:500;}
+
+/* ── FOOTER ── */
+footer{
+  position:relative;z-index:1;
+  text-align:center;padding:28px 32px;
+  border-top:1px solid var(--bdr);
+  font-family:'DM Mono',monospace;font-size:11px;color:var(--t3);
+  letter-spacing:.5px;line-height:2;
+}
+footer a{color:var(--t2);text-decoration:none;transition:color .15s;}
+footer a:hover{color:var(--t);}
+
+@media(max-width:640px){
+  .wrap{padding:0 20px 80px;}
+  header{padding:48px 0 0;}
+  .project-card{grid-template-columns:1fr;padding:22px;}
+  .card-arrow{display:none;}
+  .about-strip{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<div class="mesh">
+  <div class="mesh-blob mb1"></div>
+  <div class="mesh-blob mb2"></div>
+  <div class="mesh-blob mb3"></div>
+</div>
+
+<div class="wrap">
+
+  <header>
+    <div class="header-eyebrow">
+      <div class="eyebrow-line"></div>
+      <div class="eyebrow-text">Sports Analytics Portfolio</div>
+    </div>
+    <div class="name-block">
+      <span class="name-first">Matt</span>
+      <span class="name-last">Wolsko</span>
+    </div>
+    <p class="tagline">Building data-driven tools that answer real questions in sports. Each project starts with a genuine analytical question and ends with an interactive dashboard.</p>
+    <div class="header-links">
+      <a class="hlink" href="https://github.com/mattwolsko" target="_blank">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+        GitHub
+      </a>
+      <a class="hlink" href="mailto:matt@example.com">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+        Contact
+      </a>
+    </div>
+  </header>
+
+  <div class="divider"></div>
+
+  <div class="sec-lbl">Projects</div>
+
+  <div class="projects">
+
+    <!-- NFL CAP -->
+    <a class="project-card nfl" href="NFL_Spending.html">
+      <div class="card-left">
+        <div class="card-meta">
+          <span class="card-num">01</span>
+          <span class="card-tag tag-nfl">NFL</span>
+          <span class="card-tag tag-live"><span class="live-dot"></span>Live</span>
+        </div>
+        <div class="card-title">NFL Cap Intelligence</div>
+        <p class="card-desc">Which teams get the most wins per dollar? A full spending efficiency breakdown for all 32 teams — cap rank, dead money, position group spend, and draft vs. free agent strategy across the 2024 season.</p>
+        <div class="card-pills">
+          <span class="cpill">Cap Efficiency</span>
+          <span class="cpill">Dead Cap</span>
+          <span class="cpill">Position Spend</span>
+          <span class="cpill">Draft vs. FA</span>
+          <span class="cpill">All 32 teams</span>
+        </div>
+      </div>
+      <div class="card-arrow">↗</div>
+    </a>
+
+    <!-- NBA DRAFT -->
+    <a class="project-card nba" href="nba-draft-value.html">
+      <div class="card-left">
+        <div class="card-meta">
+          <span class="card-num">02</span>
+          <span class="card-tag tag-nba">NBA</span>
+          <span class="card-tag tag-live"><span class="live-dot"></span>Live</span>
+        </div>
+        <div class="card-title">NBA Draft Value Tracker</div>
+        <p class="card-desc">Do drafted players outperform their slot? Every first-round pick from 2010–2024 scored on Win Shares, VORP, and BPM relative to draft position. Team grades, biggest steals, and worst busts across 15 draft classes.</p>
+        <div class="card-pills">
+          <span class="cpill">Win Shares</span>
+          <span class="cpill">VORP</span>
+          <span class="cpill">BPM</span>
+          <span class="cpill">Team Grades</span>
+          <span class="cpill">2010–2024</span>
+        </div>
+      </div>
+      <div class="card-arrow">↗</div>
+    </a>
+
+    <!-- COMING SOON -->
+    <div class="project-card soon">
+      <div class="card-left">
+        <div class="card-meta">
+          <span class="card-num">03</span>
+          <span class="card-tag tag-soon">Coming Soon</span>
+        </div>
+        <div class="card-title">Earnings Call Sentiment</div>
+        <p class="card-desc">NLP analysis of public company earnings calls — confidence vs. hedging language, topics management avoided, and tone shifts quarter over quarter.</p>
+        <div class="card-pills">
+          <span class="cpill">NLP</span>
+          <span class="cpill">Sentiment Analysis</span>
+          <span class="cpill">Finance</span>
+        </div>
+      </div>
+      <div class="card-arrow">→</div>
+    </div>
+
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="sec-lbl">About</div>
+
+  <div class="about-strip">
+    <div class="about-card">
+      <div class="about-lbl">Approach</div>
+      <div class="about-val">Every project starts with a <strong>genuine analytical question</strong> — not just a dataset. The goal is answers, not dashboards.</div>
+    </div>
+    <div class="about-card">
+      <div class="about-lbl">Stack</div>
+      <div class="about-val"><strong>Python</strong> for data, <strong>Claude AI</strong> for analysis and NLP, <strong>vanilla HTML/JS</strong> for interactive dashboards. No frameworks, no bloat.</div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <a href="https://github.com/mattwolsko" target="_blank">github.com/mattwolsko</a> · Built with Claude · 2025
+</footer>
+
+</body>
+</html>
